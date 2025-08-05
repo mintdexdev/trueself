@@ -1,8 +1,6 @@
 import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/model/User";
-import { z } from "zod";
-import { usernameValidation } from "@/schemas/signupSchema";
-
+import { errorResponse, serverErrorResponse, successResponse } from "@/lib/apiResponse";
 
 export async function POST(request: Request) {
   await dbConnect();
@@ -12,12 +10,8 @@ export async function POST(request: Request) {
     const decodedUsername = decodeURIComponent(username)
     const user = await UserModel.findOne({ username: decodedUsername })
 
-    if (!user) {
-      return Response.json(
-        { success: false, message: 'User not found' },
-        { status: 404 }
-      );
-    }
+    if (!user)
+      return errorResponse("user Not found", 404)
 
     const isCodeValid = user.verifyCode === code
     const isCodeNotExpired = new Date(user.verifyCodeExpiry) > new Date()
@@ -26,27 +20,16 @@ export async function POST(request: Request) {
       user.isVerified = true
       await user.save()
 
-      return Response.json(
-        { success: true, message: 'Account verified Successfully' },
-        { status: 200 }
-      );
+      return successResponse("Account verified Successfully")
     } else if (!isCodeNotExpired) {
-      return Response.json(
-        { success: false, message: 'Verification Code is Expired' },
-        { status: 500 }
-      );
-    } else {
-      return Response.json(
-        { success: false, message: 'Verification Code is Incorrect' },
-        { status: 500 }
-      );
+      return errorResponse("Verification Code is Expired")
+    }
+    else {
+      return errorResponse("Verification Code is Incorrect")
     }
 
   } catch (error) {
     console.error("Error verifying user", error)
-    return Response.json({
-      success: false,
-      message: "Error checking username"
-    }, { status: 500 })
+    return serverErrorResponse("Error checking code")
   }
 }

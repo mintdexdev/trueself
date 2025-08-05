@@ -1,9 +1,13 @@
 ## Libraries used
 
 ```
+React
+Next
+Tailwind CSS
 Mongoose
 Zod
-Next
-React
-Resend || React-Email || node-mailer
+bcrypt
+Resend 
+React-Email 
+Next-Auth (Authjs)
 ```

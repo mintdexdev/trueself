@@ -27,9 +27,7 @@ export const authOptions: NextAuthOptions = {
             throw new Error("No user found")
           }
           if (!user.isVerified) {
-            if (!user) {
-              throw new Error("Verify account first")
-            }
+            if (!user) throw new Error("Verify account first")
           }
           const isPasswordCorrect = await bcrypt.compare(credentials.password, user.password)
           if (isPasswordCorrect) {
@@ -65,7 +63,7 @@ export const authOptions: NextAuthOptions = {
     }
   },
   pages: {
-    signIn: '/signin',
+    signIn: '/sign-in',
   },
   session: {
     strategy: 'jwt'

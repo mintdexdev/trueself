@@ -2,6 +2,7 @@ import dbConnect from '@/lib/dbConnect'
 import UserModel from '@/model/User'
 import bcrypt from 'bcryptjs'
 import { sendVerification } from '@/helpers/sendVerificationEmail'
+import { errorResponse, serverErrorResponse, successResponse } from "@/lib/apiResponse";
 
 export async function POST(request: Request) {
   await dbConnect()
@@ -13,20 +14,14 @@ export async function POST(request: Request) {
         isVerified: true,
       }
     )
-    if (existingUserVerifiedByUsername) {
-      return Response.json(
-        { success: false, message: "Username already taken" },
-        { status: 400 }
-      )
-    }
+    if (existingUserVerifiedByUsername)
+      return errorResponse("Username already taken")
+
     const verifyCode = Math.floor(100000 + Math.random() * 900000).toString()
     const existingUserByEmail = await UserModel.findOne({ email })
     if (existingUserByEmail) {
       if (existingUserByEmail.isVerified) {
-        return Response.json(
-          { success: false, message: "Email already exist" },
-          { status: 400 }
-        )
+        return errorResponse("Email already exist")
       } else {
         const hashedPassword = await bcrypt.hash(password, 10)
         existingUserByEmail.password = hashedPassword;
@@ -55,22 +50,12 @@ export async function POST(request: Request) {
     // send verification email
     const emailResponse = await sendVerification(email, username, verifyCode)
 
-    if (!emailResponse.success) {
-      return Response.json(
-        { success: false, message: emailResponse.message },
-        { status: 500 }
-      )
-    }
-    return Response.json(
-      { success: true, message: 'user registered successfully, Please verify email' },
-      { status: 201 }
-    )
+    if (!emailResponse.success)
+      return errorResponse(emailResponse.message, 400)
 
+    return successResponse("user registered successfully, Please verify email")
   } catch (error) {
     console.error("Error registring user", error)
-    return Response.json(
-      { success: false, message: "Error resigtring user" },
-      { status: 500 }
-    )
+    return serverErrorResponse("Error registring user")
   }
 }
