@@ -19,7 +19,7 @@ export async function POST(request: Request) {
   try {
     const updatedUser = await UserModel.findByIdAndUpdate(
       userId,
-      { isAcceptingMessage: acceptMessages },
+      { isAcceptingMessages: acceptMessages },
       { new: true }
     )
 
@@ -36,21 +36,28 @@ export async function POST(request: Request) {
 }
 
 export async function GET(request: Request) {
+  // Connect to the database
   await dbConnect();
+
+  // Get the user session
   const session = await getServerSession(authOptions)
   const user: User = session?.user as User
 
+  // if user is not authenticated
   if (!session || !session.user)
     return errorResponse("Not Authenticated")
 
+  // User is authenticated
   try {
+    // Retrieve the user from the database using the ID
     const userId = user._id;
     const foundUser = await UserModel.findById(userId)
 
+    // User not found
     if (!foundUser)
       return errorResponse("User not found", 404);
 
-    return successResponse("User Found", 200, { isAcceptingMessages: foundUser.isAcceptingMessage });
+    return successResponse("User Found", 200, { isAcceptingMessages: foundUser.isAcceptingMessages });
 
   } catch (error) {
     const errorMessage = "Faliure during: getting Message Accept status";

@@ -6,3 +6,20 @@ export interface ApiResponse {
   isAcceptingMessages?: boolean;
   messages?: Array<Message>;
 };
+
+// // base
+// interface BaseResponse {
+//   success: boolean;
+//   message: string;
+// }
+
+// // specific responses
+// interface MessageResponse extends BaseResponse {
+//   isAcceptingMessages?: boolean;
+//   messages?: Message[];
+// }
+
+// interface AuthResponse extends BaseResponse {
+//   token: string;
+//   user: User;
+// }

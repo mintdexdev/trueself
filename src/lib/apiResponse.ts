@@ -1,16 +1,29 @@
+import { Message } from "@/model/User";
+import { ApiResponse } from "@/types/ApiResponse";
 import { NextResponse } from "next/server";
 
 export function successResponse(
   message: string,
   status: number = 200,
-  data?: any
+  options?: {
+    isAcceptingMessages?: boolean;
+    messages?: Message[];
+  }
 ) {
-  return NextResponse.json({
+  const response: ApiResponse = {
     success: true,
     message,
-    ...(data !== undefined && { data })
-  }, { status });
+    ...(options?.isAcceptingMessages !== undefined && {
+      isAcceptingMessages: options.isAcceptingMessages,
+    }),
+    ...(options?.messages !== undefined && {
+      messages: options.messages,
+    }),
+  };
+
+  return NextResponse.json(response, { status });
 }
+
 
 export function errorResponse(
   message: any,

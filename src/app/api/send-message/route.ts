@@ -11,7 +11,7 @@ export async function POST(request: Request) {
     if (!user) errorResponse("User Not Found", 404)
 
     //  is user accepting the messages?
-    if (!user?.isAcceptingMessage)
+    if (!user?.isAcceptingMessages)
       return errorResponse("User not accepting messages")
 
     const newMessage = { content, createdAt: new Date() }

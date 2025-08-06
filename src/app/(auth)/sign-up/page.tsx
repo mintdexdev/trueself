@@ -21,8 +21,7 @@ import {
   FormMessage
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-
-import { CircleGauge, Loader } from 'lucide-react';
+import { Loader } from 'lucide-react';
 
 const page = () => {
   const [username, setUsername] = useState('')
@@ -75,15 +74,9 @@ const page = () => {
     } catch (error) {
       console.error('Error during sign-up:', error);
       const axiosError = error as AxiosError<ApiResponse>;
-
-      // Default error message
-      let errorMessage = axiosError.response?.data.message;
-      // ('There was a problem with your sign-up. Please try again.');
-      toast.error('Sign Up Failed',
-        {
-          description: errorMessage,
-        }
-      );
+      toast.error('Sign Up Failed', {
+        description: axiosError.response?.data.message
+      });
     } finally {
       setIsSubmitting(false)
     }
