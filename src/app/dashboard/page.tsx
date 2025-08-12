@@ -127,45 +127,32 @@ const Dashboard = () => {
       { description: 'Profile link is copied to clipboard' });
   }
 
-
   return (
     <section id='dashboard'>
       <div className='container-x'>
-        <p> Welcome, {cuser?.username || cuser?.email} </p>
+        <div className='text-center'>
+          <p className='font-semibold'> Welcome, {cuser?.username || cuser?.email} </p>
+          <h1 className="text-5xl font-bold">Dashboard</h1>
+        </div>
 
-
-        <div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 bg-red">
-          <h1 className="text-5xl font-bold my-4">Dashboard</h1>
-
-          <div className="mb-4">
-            <h2 className="text-lg font-semibold mb-2">Copy Your Unique Link</h2>{' '}
-            <div className="flex items-center">
-              <input
-                type="text"
-                value={profileUrl}
-                disabled
-                className="input input-bordered w-full p-2 mr-2"
-              />
-              <Button onClick={copyToClipboard}>Copy</Button>
-            </div>
-          </div>
-
-          <div className="mb-4">
-            <Switch
-              {...register('acceptMessages')}
-              checked={acceptMessages}
-              onCheckedChange={handleSwitchChange}
-              disabled={isSwitchLoading}
-
+        <div className="mb-4">
+          <h2 className="text-lg font-semibold">Copy Your Unique Link</h2>
+          <div className="flex items-center ">
+            <input
+              className="input input-bordered w-full px-2 py-1.5 font-mono bg-neutral-200 rounded-l-lg"
+              type="text"
+              value={profileUrl}
+              disabled
             />
-            <span className="ml-2">
-              Accept Messages: {acceptMessages ? 'Yes' : 'No'}
-            </span>
+            <Button className='rounded-l-none'
+              onClick={copyToClipboard}>Copy Profile Link</Button>
           </div>
-          <Separator />
+        </div>
 
+        <Separator />
+
+        <div className='my-4 flex justify-between items-center'>
           <Button
-            className="mt-4"
             variant="outline"
             onClick={(e) => {
               e.preventDefault();
@@ -178,20 +165,35 @@ const Dashboard = () => {
               <RefreshCcw className="h-4 w-4" />
             )}
           </Button>
-          <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {messages.length > 0 ? (
-              messages.map((message) => (
-                <MessageCard
-                  // ? check this
-                  key={message._id as string}
-                  message={message}
-                  onMessageDelete={handleDeleteMessage}
-                />
-              ))
-            ) : (
-              <p>No messages to display.</p>
-            )}
+
+          <div>
+            <Switch
+              {...register('acceptMessages')}
+              checked={acceptMessages}
+              onCheckedChange={handleSwitchChange}
+              disabled={isSwitchLoading}
+
+            />
+            <span className="ml-2">
+              Accept Messages: {acceptMessages ? 'Yes' : 'No'}
+            </span>
           </div>
+
+        </div>
+
+        <div className="mt-4 grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ">
+          {messages.length > 0 ? (
+            messages.map((message) => (
+              <MessageCard
+                // ? check this
+                key={message._id as string}
+                message={message}
+                onMessageDelete={handleDeleteMessage}
+              />
+            ))
+          ) : (
+            <p>No messages to display.</p>
+          )}
         </div>
 
       </div>

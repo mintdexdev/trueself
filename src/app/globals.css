@@ -38,8 +38,6 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
-
-
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -129,4 +127,9 @@
 .container-x {
   padding-inline: clamp(24px, 17.4545px + 1.8182vw, 40px);
   @apply max-w-[1920px] mx-auto;
+}
+
+button,
+a {
+  cursor: pointer !important;
 }
