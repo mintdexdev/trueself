@@ -1,9 +1,7 @@
 "use client"
 
 import { signinSchema } from '@/schemas/signinSchema';
-import { ApiResponse } from '@/types/ApiResponse';
 import { zodResolver } from '@hookform/resolvers/zod';
-import axios, { AxiosError } from 'axios';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import z from 'zod';
@@ -15,7 +13,7 @@ import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/components/
 import { Input } from '@/components/ui/input';
 import { signIn } from 'next-auth/react';
 
-const page = () => {
+const SignIn = () => {
 
   const router = useRouter();
 
@@ -105,4 +103,4 @@ const page = () => {
   );
 }
 
-export default page
+export default SignIn

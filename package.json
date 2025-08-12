@@ -1,6 +1,6 @@
 {
-  "name": "mistry-message",
-  "version": "0.1.0",
+  "name": "trueself",
+  "version": "0.2.1",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
@@ -23,6 +23,7 @@
     "bcryptjs": "3.0.2",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
+    "dayjs": "^1.11.13",
     "embla-carousel-autoplay": "8.6.0",
     "embla-carousel-react": "8.6.0",
     "lucide-react": "0.536.0",

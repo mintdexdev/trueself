@@ -5,9 +5,8 @@ import { errorResponse, successResponse, serverErrorResponse } from "@/lib/apiRe
 import { User } from "next-auth";
 import mongoose from "mongoose";
 import UserModel from "@/model/User";
-import { use } from "react";
 
-export async function GET(request: Request) {
+export async function GET() {
   await dbConnect();
 
   const session = await getServerSession(authOptions)
@@ -21,7 +20,7 @@ export async function GET(request: Request) {
       { $match: { _id: userId } },
       { $unwind: '$messages' },
       { $sort: { 'messages.createdAt': -1 } },
-      { $group: { _id: '$_id', messages: { $push: '$meesages' } } }
+      { $group: { _id: '$_id', messages: { $push: '$messages' } } }
     ])
 
     if (!user) {

@@ -15,7 +15,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
-const page = () => {
+const Dashboard = () => {
   const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isSwitchLoading, setIsSwitchLoading] = useState(false)
@@ -25,6 +25,7 @@ const page = () => {
   }
 
   const { data: session } = useSession();
+  const cuser: User = session?.user as User;
 
   const form = useForm({
     resolver: zodResolver(acceptMessagesSchema),
@@ -37,6 +38,7 @@ const page = () => {
     setIsSwitchLoading(true);
     try {
       const response = await axios.get<ApiResponse>(`/api/accept-messages`)
+
       setValue('acceptMessages', response.data.isAcceptingMessages ?? true);
     } catch (error) {
       console.error('Error during getting isAcceptingMessages:', error);
@@ -48,7 +50,7 @@ const page = () => {
     } finally {
       setIsSwitchLoading(false);
     }
-  }, [setValue, toast])
+  }, [setValue])
 
 
   const fetchMessages = useCallback(async (refresh: boolean = false) => {
@@ -59,7 +61,7 @@ const page = () => {
       setMessages(response.data.messages || []);
 
       if (messages.length === 0 && refresh === true)
-        toast.info('No Messages',
+        toast.info('No Messages Yo',
           { description: 'There are no messages sent to you' });
       else if (refresh) {
         toast.info('Refreshed Messages',
@@ -77,7 +79,7 @@ const page = () => {
       setIsSwitchLoading(false);
     }
   },
-    [setIsLoading, setMessages, toast]
+    [setIsLoading, setMessages, messages.length]
   );
 
   // Fetch initial state from the server
@@ -87,7 +89,7 @@ const page = () => {
     fetchAcceptMessages();
     fetchMessages();
 
-  }, [session, setValue, toast, fetchAcceptMessages, fetchMessages]);
+  }, [session, setValue, fetchAcceptMessages, fetchMessages]);
 
   // Handle switch change
   const handleSwitchChange = async () => {
@@ -99,7 +101,7 @@ const page = () => {
       toast(response.data.message,
         { description: 'Accept Message Status Changed' });
     } catch (error) {
-      console.error('Error during: Changing Accept Message Status', error);
+      console.error('Internal Error during: Changing Accept Message Status', error);
       const axiosError = error as AxiosError<ApiResponse>;
       toast.error('Error during: Changing Accept Message Status', {
         description: axiosError.response?.data.message
@@ -109,13 +111,12 @@ const page = () => {
   };
 
   if (!session || !session.user) {
-    return <div>Please Login</div>;
+    return <div>Loading</div>;
   }
 
   const { username } = session.user as User;
 
   const baseUrl = `${window.location.protocol}//${window.location.host}`
-  console.log(baseUrl)
   const profileUrl = `${baseUrl}/u/${username}`
 
   const copyToClipboard = () => {
@@ -125,66 +126,77 @@ const page = () => {
   }
 
   return (
-    <div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 bg-white rounded max-w-6xl">
-      <h1 className="text-4xl font-bold mb-4">User Dashboard</h1>
-
-      <div className="mb-4">
-        <h2 className="text-lg font-semibold mb-2">Copy Your Unique Link</h2>{' '}
-        <div className="flex items-center">
-          <input
-            type="text"
-            value={profileUrl}
-            disabled
-            className="input input-bordered w-full p-2 mr-2"
-          />
-          <Button onClick={copyToClipboard}>Copy</Button>
+    <section id='dashboard'>
+      <div className='container-x'>
+        <div className='text-center'>
+          <p className='font-semibold'> Welcome, {cuser?.username || cuser?.email} </p>
+          <h1 className="text-5xl font-bold">Dashboard</h1>
         </div>
-      </div>
 
-      <div className="mb-4">
-        <Switch
-          {...register('acceptMessages')}
-          checked={acceptMessages}
-          onCheckedChange={handleSwitchChange}
-          disabled={isSwitchLoading}
-
-        />
-        <span className="ml-2">
-          Accept Messages: {acceptMessages ? 'Yes' : 'No'}
-        </span>
-      </div>
-      <Separator />
-
-      <Button
-        className="mt-4"
-        variant="outline"
-        onClick={(e) => {
-          e.preventDefault();
-          fetchMessages(true);
-        }}
-      >
-        {isLoading ? (
-          <Loader className="h-4 w-4 animate-spin" />
-        ) : (
-          <RefreshCcw className="h-4 w-4" />
-        )}
-      </Button>
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
-        {messages.length > 0 ? (
-          messages.map((message) => (
-            <MessageCard
-              // ? check this
-              key={message.id}
-              message={message}
-              onMessageDelete={handleDeleteMessage}
+        <div className="mb-4">
+          <h2 className="text-lg font-semibold">Copy Your Unique Link</h2>
+          <div className="flex items-center ">
+            <input
+              className="input input-bordered w-full px-2 py-1.5 font-mono bg-neutral-200 rounded-l-lg"
+              type="text"
+              value={profileUrl}
+              disabled
             />
-          ))
-        ) : (
-          <p>No messages to display.</p>
-        )}
+            <Button className='rounded-l-none'
+              onClick={copyToClipboard}>Copy Profile Link</Button>
+          </div>
+        </div>
+
+        <Separator />
+
+        <div className='my-4 flex justify-between items-center'>
+          <Button
+            variant="outline"
+            onClick={(e) => {
+              e.preventDefault();
+              fetchMessages(true);
+            }}
+          >
+            {isLoading ? (
+              <Loader className="h-4 w-4 animate-spin" />
+            ) : (
+              <RefreshCcw className="h-4 w-4" />
+            )}
+          </Button>
+
+          <div>
+            <Switch
+              {...register('acceptMessages')}
+              checked={acceptMessages}
+              onCheckedChange={handleSwitchChange}
+              disabled={isSwitchLoading}
+
+            />
+            <span className="ml-2">
+              Accept Messages: {acceptMessages ? 'Yes' : 'No'}
+            </span>
+          </div>
+
+        </div>
+
+        <div className="mt-4 grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ">
+          {messages.length > 0 ? (
+            messages.map((message) => (
+              <MessageCard
+                // ? check this
+                key={message._id as string}
+                message={message}
+                onMessageDelete={handleDeleteMessage}
+              />
+            ))
+          ) : (
+            <p>No messages to display.</p>
+          )}
+        </div>
+
       </div>
-    </div>
+    </section>
   );
 }
 
-export default page
+export default Dashboard

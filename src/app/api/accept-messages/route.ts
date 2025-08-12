@@ -23,10 +23,11 @@ export async function POST(request: Request) {
       { new: true }
     )
 
-    if (!updatedUser)
-      return errorResponse("Message Accept status update Failed")
 
-    return successResponse("Message Accept status updated successfully")
+    if (!updatedUser)
+      return errorResponse("Faliure: Accept Messages status not updated")
+
+    return successResponse("Success: Accept Messages status updated")
   } catch (error) {
     const errorMessage = "Faliure during: Message Accept status update"
     console.error(errorMessage, error)
@@ -35,7 +36,7 @@ export async function POST(request: Request) {
 
 }
 
-export async function GET(request: Request) {
+export async function GET() {
   // Connect to the database
   await dbConnect();
 

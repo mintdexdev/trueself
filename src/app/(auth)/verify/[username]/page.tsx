@@ -12,7 +12,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
-const page = () => {
+const Verify = () => {
   const router = useRouter()
   const params = useParams<{ username: string }>()
 
@@ -78,4 +78,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Verify

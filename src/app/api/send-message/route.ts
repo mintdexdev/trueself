@@ -8,7 +8,7 @@ export async function POST(request: Request) {
 
   try {
     const user = await UserModel.findOne({ username })
-    if (!user) errorResponse("User Not Found", 404)
+    if (!user) return errorResponse("User Not Found", 404)
 
     //  is user accepting the messages?
     if (!user?.isAcceptingMessages)
