@@ -33,12 +33,12 @@ export default function MessageCard({ message, onMessageDelete }: MessageCardPro
       const response = await axios.delete<ApiResponse>(
         `/api/delete-message/${message._id}`
       );
-      toast(response.data.message);
+      toast.success(response.data.message);
       onMessageDelete(message._id as string);
 
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
-      toast('Error', {
+      toast.error('Error', {
         description:
           axiosError.response?.data.message ?? 'Failed to delete message',
       });

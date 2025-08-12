@@ -16,10 +16,10 @@ import Autoplay from "embla-carousel-autoplay"
 import messages from '@/messages.json'
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import Footer from '@/components/Footer';
 
 
 export default function Home() {
-  const currentYear = new Date().getFullYear()
   return (
     <>
       {/* Main content */}
@@ -31,7 +31,7 @@ export default function Home() {
             Anonymous Feedback
           </h1>
           <p className="mt-3 md:mt-4 text-base md:text-lg">
-            TrueSelf - Where your identity remains a secret.
+            Trueself - Where your identity remains a secret.
           </p>
           <p>
             Get Anonymous Feedback from anyone
@@ -75,9 +75,7 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="text-center p-4 md:p-6 bg-gray-900 text-white">
-        © {currentYear} TrueSelf All rights reserved.
-      </footer>
+      <Footer />
     </>
   );
 }
