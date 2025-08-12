@@ -14,7 +14,6 @@ import { useSession } from 'next-auth/react'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { User as CurrentUser } from 'next-auth';
 
 const Dashboard = () => {
   const [messages, setMessages] = useState<Message[]>([])
@@ -51,7 +50,7 @@ const Dashboard = () => {
     } finally {
       setIsSwitchLoading(false);
     }
-  }, [setValue, toast])
+  }, [setValue])
 
 
   const fetchMessages = useCallback(async (refresh: boolean = false) => {
@@ -80,7 +79,7 @@ const Dashboard = () => {
       setIsSwitchLoading(false);
     }
   },
-    [setIsLoading, setMessages, toast]
+    [setIsLoading, setMessages, messages.length]
   );
 
   // Fetch initial state from the server
@@ -90,7 +89,7 @@ const Dashboard = () => {
     fetchAcceptMessages();
     fetchMessages();
 
-  }, [session, setValue, toast, fetchAcceptMessages, fetchMessages]);
+  }, [session, setValue, fetchAcceptMessages, fetchMessages]);
 
   // Handle switch change
   const handleSwitchChange = async () => {

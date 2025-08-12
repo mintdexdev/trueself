@@ -9,9 +9,9 @@ const Navbar = () => {
   return (
     <nav className="px-4 py-2  shadow-md bg-neutral-950 text-white">
       <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center">
-        <a href="/" className="text-xl font-bold mb-4 sm:mb-0">
+        <Link href="/" className="text-xl font-bold mb-4 sm:mb-0">
           Trueself
-        </a>
+        </Link>
         {session ? (
           <>
 

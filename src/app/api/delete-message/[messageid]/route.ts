@@ -5,7 +5,7 @@ import { errorResponse, successResponse, serverErrorResponse } from "@/lib/apiRe
 import { User } from "next-auth";
 import UserModel from "@/model/User";
 
-export async function DELETE(request: Request, { params }: { params: { messageid: string } }) {
+export async function DELETE(request: Request, { params }: { params: any }) {
   await dbConnect();
 
   const messageId = params.messageid;
