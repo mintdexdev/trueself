@@ -15,7 +15,7 @@ import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/components/
 import { Input } from '@/components/ui/input';
 import { signIn } from 'next-auth/react';
 
-const page = () => {
+const SignIn = () => {
 
   const router = useRouter();
 
@@ -105,4 +105,4 @@ const page = () => {
   );
 }
 
-export default page
+export default SignIn

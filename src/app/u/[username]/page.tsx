@@ -73,6 +73,7 @@ export default function SendMessage() {
       form.reset({ ...form.getValues(), content: '' });
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
+      console.log(axiosError)
       toast.error('Error', {
         description:
           axiosError.response?.data.message ?? 'Failed to sent message'

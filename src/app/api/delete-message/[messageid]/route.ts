@@ -3,7 +3,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]/options";
 import { errorResponse, successResponse, serverErrorResponse } from "@/lib/apiResponse";
 import { User } from "next-auth";
-import mongoose from "mongoose";
 import UserModel from "@/model/User";
 
 export async function DELETE(request: Request, { params }: { params: { messageid: string } }) {
@@ -15,7 +14,6 @@ export async function DELETE(request: Request, { params }: { params: { messageid
   if (!session || !session.user)
     return errorResponse("Not Authenticated")
 
-  const userId = new mongoose.Types.ObjectId(user._id);
   try {
     const updatedResult = await UserModel.updateOne(
       { _id: user._id },

@@ -1,15 +1,11 @@
 'use client'
 
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-
+import React, { useState } from 'react';
+import axios, { AxiosError } from 'axios';
+import dayjs from 'dayjs';
+import { X } from 'lucide-react';
+import { Message } from '@/model/User';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,80 +16,70 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { Button } from "./ui/button"
-import { X } from "lucide-react"
-import { Message } from "@/model/User"
-import axios, { AxiosError } from "axios"
-import { toast } from "sonner"
-import { ApiResponse } from "@/types/ApiResponse"
+} from '@/components/ui/alert-dialog';
+import { Button } from './ui/button';
+import { toast } from 'sonner';
+import { ApiResponse } from '@/types/ApiResponse';
 
 type MessageCardProps = {
   message: Message;
   onMessageDelete: (messageId: string) => void;
 };
 
-const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
+export default function MessageCard({ message, onMessageDelete }: MessageCardProps) {
 
   const handleDeleteConfirm = async () => {
     try {
-      const response = await axios.delete<ApiResponse>(`/api/delete-message/${message._id}`)
-      toast.error('Sign Up Failed', {
-        description: response?.data.message,
-      });
-      onMessageDelete(message._id as string);
+      const response = await axios.delete<ApiResponse>(
+        `/api/delete-message/${message._id}`
+      );
+      toast(response.data.message);
+      onMessageDelete(message._id);
+
     } catch (error) {
-      console.error('Internal Error during Verification:', error);
       const axiosError = error as AxiosError<ApiResponse>;
-      toast.error('Sign Up Failed', {
-        description: axiosError.response?.data.message || "Internal Error during Verification",
+      toast('Error', {
+        description:
+          axiosError.response?.data.message ?? 'Failed to delete message',
       });
     }
-  }
+  };
 
   return (
-    <Card>
+    <Card className="card-bordered">
       <CardHeader>
-        <CardTitle>Card Title</CardTitle>
-
-        <AlertMessage handleDeleteConfirm={handleDeleteConfirm} />
-
-        <CardDescription>Card Description</CardDescription>
-        <CardAction>Card Action</CardAction>
+        <div className="flex justify-between items-center">
+          <CardTitle>{message.content}</CardTitle>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant='destructive'>
+                <X className="w-5 h-5" />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete
+                  this message.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>
+                  Cancel
+                </AlertDialogCancel>
+                <AlertDialogAction onClick={handleDeleteConfirm}>
+                  Continue
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
+        <div className="text-sm">
+          {dayjs(message.createdAt).format('MMM D, YYYY h:mm A')}
+        </div>
       </CardHeader>
-      <CardContent>
-        <p>Card Content</p>
-      </CardContent>
-      <CardFooter>
-        <p>Card Footer</p>
-      </CardFooter>
+      <CardContent></CardContent>
     </Card>
-  )
-}
-export default MessageCard
-
-const AlertMessage = ({ handleDeleteConfirm }: any) => {
-  return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button variant='destructive'>
-          <X className="w-5 h-5" />
-        </Button>
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete this message.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogCancel>
-          Cancel
-        </AlertDialogCancel>
-        <AlertDialogAction onClick={handleDeleteConfirm}>
-          Continue
-        </AlertDialogAction>
-      </AlertDialogContent>
-    </AlertDialog>
-  )
+  );
 }

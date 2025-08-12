@@ -1,8 +1,5 @@
 'use client';
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
 import { Mail } from 'lucide-react'; // Assuming you have an icon for messages
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -17,6 +14,8 @@ import {
 import Autoplay from "embla-carousel-autoplay"
 
 import messages from '@/messages.json'
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 
 export default function Home() {
@@ -24,25 +23,37 @@ export default function Home() {
   return (
     <>
       {/* Main content */}
-      <main className="flex-grow flex flex-col items-center justify-center px-4 md:px-24 py-12 bg-gray-800 text-white">
+      <main className="min-h-screen flex-grow flex flex-col items-center justify-center px-4 md:px-24 py-12 bg-neutral-950 text-neutral-100">
         <section className="text-center mb-8 md:mb-12">
           <h1 className="text-3xl md:text-5xl font-bold">
-            Dive into the World of Anonymous Feedback
+            Dive into the World of
+            <br />
+            Anonymous Feedback
           </h1>
           <p className="mt-3 md:mt-4 text-base md:text-lg">
-            True Feedback - Where your identity remains a secret.
+            TrueSelf - Where your identity remains a secret.
           </p>
+          <p>
+            Get Anonymous Feedback from anyone
+          </p>
+
+          <Link href="/dashboard"
+          >
+            <Button className='mt-4 text-black' variant={'outline'}>
+              Get Started
+            </Button>
+          </Link>
         </section>
 
         {/* Carousel for Messages */}
         <Carousel
           className="w-full max-w-xs"
-          plugins={[Autoplay({ delay: 2000 })]}
+          plugins={[Autoplay({ delay: 5000 })]}
         >
           <CarouselContent>
             {messages.map((message, index) => (
               <CarouselItem key={index} className="p-4">
-                <Card>
+                <Card className='bg-neutral-800 text-neutral-100'>
                   <CardHeader>
                     <CardTitle>{message.title}</CardTitle>
                   </CardHeader>
@@ -59,15 +70,13 @@ export default function Home() {
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
         </Carousel>
 
       </main>
 
       {/* Footer */}
       <footer className="text-center p-4 md:p-6 bg-gray-900 text-white">
-        © {currentYear} True Feedback. All rights reserved.
+        © {currentYear} TrueSelf All rights reserved.
       </footer>
     </>
   );
